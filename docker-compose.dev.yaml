@@ -1,0 +1,14 @@
+services:
+  api:
+    env_file: ./configs/config/.env.dev
+
+  postgres:
+    env_file: ./.env
+
+  redis:
+    env_file: ./.env
+
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"

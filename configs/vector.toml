@@ -1,0 +1,48 @@
+[sources.docker_logs]
+type = "docker_logs"
+docker_host = "/var/run/docker.sock"
+include_containers = ["user_pool_api"]
+
+[transforms.parse_json]
+type = "remap"
+inputs = ["docker_logs"]
+source = '''
+parsed = parse_json(.message) ?? {}
+
+if is_object(parsed) {
+    .level = parsed.level || "info"
+    .logger = parsed.logger || "unknown"
+    .msg = parsed.event || parsed.message || .message
+    .ts = parsed.timestamp || now()
+
+    if parsed.trace != null {
+        .trace, err = to_string(parsed.trace)
+        if err != null {
+            .trace = "trace unavailable"
+        }
+    }
+}
+
+del(.message)
+del(.event)
+del(.image)
+del(.host)
+del(.label)
+del(.docker)
+del(.container_created_at)
+del(.container_id)
+del(.source_type)
+del(.stream)
+
+'''
+
+[sinks.loki]
+type = "loki"
+inputs = ["parse_json"]
+endpoint = "http://loki:3100"
+encoding.codec = "json"
+
+labels.container_name = "{{ container_name }}"
+labels.service = "api"
+labels.level = "{{ level }}"
+

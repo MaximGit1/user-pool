@@ -1,0 +1,11 @@
+services:
+  postgres:
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    env_file: ./configs/config/.env.test
+
+  redis:
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    env_file: ./configs/config/.env.test
+    command: redis-server --requirepass ${REDIS_PASSWORD}

@@ -1,0 +1,120 @@
+[project]
+name = "user-pool"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.17.2",
+    "asgi-monitor>=0.6.1",
+    "bazario[dishka]>=0.4.2",
+    "bcrypt>=5.0.0",
+    "dishka>=1.7.2",
+    "fastapi>=0.128.0",
+    "gunicorn>=23.0.0",
+    "httptools>=0.7.1",
+    "orjson>=3.11.5",
+    "psycopg[binary]>=3.3.2",
+    "pyyaml>=6.0.3",
+    "redis>=7.1.0",
+    "sqlalchemy[asyncio]>=2.0.45",
+    "structlog>=25.5.0",
+    "uuid-utils>=0.13.0",
+    "uvicorn>=0.40.0",
+    "uvloop>=0.22.1",
+]
+
+
+[dependency-groups]
+test = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+]
+
+lint = [
+    "ruff>=0.14.10",
+    "mypy>=1.19.1",
+]
+
+all = [
+    { include-group = "test" },
+    { include-group = "lint" },
+]
+
+
+# Configs
+[tool.pytest.ini_options]
+addopts = [
+    "-v",
+    "--color=yes",
+    "--cache-clear",
+    "--cov=src",
+    "--cov-report=term-missing",
+]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.mypy]
+files = ["src/bot_farm/"]
+exclude = ".venv"
+python_version = "3.14"
+strict = true
+pretty = true
+follow_imports = "silent"
+
+no_implicit_optional = true
+check_untyped_defs = true
+show_error_codes = true
+implicit_reexport = false
+namespace_packages = false
+ignore_missing_imports = true
+
+warn_unused_ignores = true
+warn_return_any = true
+warn_redundant_casts = true
+
+allow_untyped_calls = true
+allow_subclassing_any = true
+allow_untyped_decorators = true
+
+disallow_incomplete_defs = true
+disallow_any_unimported = false
+
+
+[tool.ruff]
+src = ["src", "tests"]
+target-version = "py314"
+line-length = 79
+fix = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D",  # pydocstyle
+    "S101",   # assert allowed
+    "PGH003", # code error false positive
+    "E721",   # direct isinstance checks
+    "PT012",  # pytest.raises style
+    "E501",   # ignore line too long
+    "COM812", # missing trailing comma in multiline literal
+    "UP046",  # checks specifications in generic classes.
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+quote-style = "double"
+indent-style = "space"
+
+[tool.coverage.run]
+omit = [
+    "src/user_pool/domain/ports/*",
+    "src/user_pool/application/common/filters/*",
+    "src/user_pool/application/common/dtos/*",
+
+    "src/user_pool/delivery/*",
+    "src/user_pool/setup/*",
+]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
