@@ -72,20 +72,6 @@ wheels = [
 ]
 
 [[package]]
-name = "bazario"
-version = "0.4.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/39/2d/fba167e1e2cdcb7a37a46047e5b43e5152ce6b86402eda4db938f4b45375/bazario-0.4.2.tar.gz", hash = "sha256:207dd745eba63f35bea8204f438f830538eaba59a0533ee3f8c42bbf698e11da", size = 9355, upload-time = "2025-01-30T00:50:42.871Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/57/f5bfbafda1d4d4174c39fbdd45851e3caa2276b1047e88f6a5cec45d0e42/bazario-0.4.2-py3-none-any.whl", hash = "sha256:156805fb7fa5ecdf07b713d87413af48753ccbda8b363567e31beef2c43e9b9d", size = 14248, upload-time = "2025-01-30T00:50:41.684Z" },
-]
-
-[package.optional-dependencies]
-dishka = [
-    { name = "dishka" },
-]
-
-[[package]]
 name = "bcrypt"
 version = "5.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -645,6 +631,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pyjwt"
+version = "2.11.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/5a/b46fa56bf322901eee5b0454a34343cdbdae202cd421775a8ee4e42fd519/pyjwt-2.11.0.tar.gz", hash = "sha256:35f95c1f0fbe5d5ba6e43f00271c275f7a1a4db1dab27bf708073b75318ea623", size = 98019, upload-time = "2026-01-30T19:59:55.694Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6f/01/c26ce75ba460d5cd503da9e13b21a33804d38c2165dec7b716d06b13010c/pyjwt-2.11.0-py3-none-any.whl", hash = "sha256:94a6bde30eb5c8e04fee991062b534071fd1439ef58d2adc9ccb823e7bcd0469", size = 28224, upload-time = "2026-01-30T19:59:54.539Z" },
+]
+
+[[package]]
 name = "pytest"
 version = "9.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -831,7 +826,6 @@ source = { virtual = "." }
 dependencies = [
     { name = "alembic" },
     { name = "asgi-monitor" },
-    { name = "bazario", extra = ["dishka"] },
     { name = "bcrypt" },
     { name = "dishka" },
     { name = "fastapi" },
@@ -839,6 +833,7 @@ dependencies = [
     { name = "httptools" },
     { name = "orjson" },
     { name = "psycopg", extra = ["binary"] },
+    { name = "pyjwt" },
     { name = "pyyaml" },
     { name = "redis" },
     { name = "sqlalchemy", extra = ["asyncio"] },
@@ -870,7 +865,6 @@ test = [
 requires-dist = [
     { name = "alembic", specifier = ">=1.17.2" },
     { name = "asgi-monitor", specifier = ">=0.6.1" },
-    { name = "bazario", extras = ["dishka"], specifier = ">=0.4.2" },
     { name = "bcrypt", specifier = ">=5.0.0" },
     { name = "dishka", specifier = ">=1.7.2" },
     { name = "fastapi", specifier = ">=0.128.0" },
@@ -878,6 +872,7 @@ requires-dist = [
     { name = "httptools", specifier = ">=0.7.1" },
     { name = "orjson", specifier = ">=3.11.5" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.2" },
+    { name = "pyjwt", specifier = ">=2.11.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "redis", specifier = ">=7.1.0" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.45" },

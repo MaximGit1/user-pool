@@ -1,8 +1,5 @@
 from uuid import UUID
-from dataclasses import dataclass
 from logging import getLogger
-from bazario import Request
-from bazario.asyncio import RequestHandler
 
 from user_pool.application.common.data.dtos.assigned_user import UserLockDTO
 from user_pool.application.common.data.dtos.users import UserFullDTO
@@ -20,14 +17,7 @@ from user_pool.application.common.repositories.user_read import (
 log = getLogger(__name__)
 
 
-@dataclass(frozen=True)
-class RetrieveUserRequest(Request[UserFullDTO]):
-    user_id: UUID
-
-
-class RetrieveUserRequestHandler(
-    RequestHandler[RetrieveUserRequest, UserFullDTO]
-):
+class RetrieveUserRequestHandler:
     def __init__(
         self,
         user_repo: UserReadRepository,
@@ -36,8 +26,7 @@ class RetrieveUserRequestHandler(
         self._user_repo = user_repo
         self._assigned_user_repo = assigned_user_repo
 
-    async def handle(self, request: RetrieveUserRequest) -> UserFullDTO:
-        user_id = request.user_id
+    async def handle(self, user_id: UUID) -> UserFullDTO:
         user_id_vo = UserID.unsafe(user_id)
 
         user = await self._user_repo.get_by_id(user_id_vo)

@@ -1,12 +1,6 @@
-from dataclasses import dataclass
 from logging import getLogger
 
-from bazario import Request
-from bazario.asyncio import RequestHandler
-
-from user_pool.application.common.data.dtos.users import UserShortDTO
-from user_pool.application.common.data.filters.users import UserFilter
-from user_pool.application.common.data.pagination import Pagination
+from user_pool.application.common.data.dtos.users import UserShortDTO, RetrieveUsersListRequest
 from user_pool.application.common.repositories.assigned_user_read import (
     AssignedUserReadRepository,
 )
@@ -14,19 +8,9 @@ from user_pool.application.common.repositories.user_read import (
     UserReadRepository,
 )
 
-
 log = getLogger(__name__)
 
-
-@dataclass(frozen=True)
-class RetrieveUsersListRequest(Request[list[UserShortDTO]]):
-    pagination: Pagination
-    filters: UserFilter
-
-
-class RetrieveUserShortHandler(
-    RequestHandler[RetrieveUsersListRequest, list[UserShortDTO]]
-):
+class RetrieveUserShortHandler:
     def __init__(
         self,
         user_repo: UserReadRepository,

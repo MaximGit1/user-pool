@@ -7,9 +7,7 @@ from user_pool.setup.components.di.providers.db import get_db_providers
 from user_pool.setup.components.di.providers.handlers import (
     get_handler_providers,
 )
-from user_pool.setup.components.di.providers.orchestration import (
-    bazario_provide,
-)
+
 from user_pool.setup.config import Config
 
 
@@ -19,7 +17,6 @@ def get_adapters_providers() -> list[Provider]:
         *get_db_providers(),
         *get_cache_providers(),
         port_provider(),
-        bazario_provide(),
     ]
 
 

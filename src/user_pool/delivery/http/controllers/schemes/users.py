@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 
-from user_pool.application.common.data.dtos.users import UserCreateDTO
+from user_pool.application.common.data.dtos.users import UserCreateDTO, RetrieveUsersListRequest
 from user_pool.application.common.data.filters.users import UserFilter
 from user_pool.application.common.data.pagination import Pagination, SortOrder
 
@@ -62,8 +62,8 @@ class UsersListScheme:
     username: str | None = None
     email: str | None = None
 
-    def to_dto(self) -> tuple[Pagination, UserFilter]:
-        return (
-            Pagination(offset=self.offset, limit=self.limit, order=self.order),
-            UserFilter(username=self.username, email=self.email),
+    def to_dto(self) -> RetrieveUsersListRequest:
+        return RetrieveUsersListRequest(
+            pagination=Pagination(offset=self.offset, limit=self.limit, order=self.order),
+            filters=UserFilter(username=self.username, email=self.email),
         )

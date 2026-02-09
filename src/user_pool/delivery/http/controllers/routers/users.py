@@ -1,23 +1,21 @@
 from uuid import UUID
 
-from bazario.asyncio import Publisher, Sender
+
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, Body, Depends
 from starlette import status
 
-from user_pool.application.commands.user_locked import UserLocked
-from user_pool.application.commands.user_unlocked import UserUnlocked
+from user_pool.application.commands.user_created import UserCreatedHandler
+from user_pool.application.commands.user_locked import UserLocked, UserLockedHandler
+from user_pool.application.commands.user_unlocked import  UserUnlockedHandler
 from user_pool.application.common.data.dtos.users import (
     UserFullDTO,
     UserShortDTO,
 )
-from user_pool.application.queries.get_user_id import RetrieveNewUserIDRequest
-from user_pool.application.queries.user_get_by_id import RetrieveUserRequest
-from user_pool.application.queries.user_is_locked import (
-    RetrieveUserIsLockedRequest,
-)
-from user_pool.application.queries.users_list import RetrieveUsersListRequest
+
+from user_pool.application.queries.user_get_by_id import RetrieveUserRequestHandler
+from user_pool.application.queries.users_list import RetrieveUserShortHandler
 from user_pool.delivery.http.controllers.schemes.assigned_users import (
     ProjectScheme,
 )
@@ -42,13 +40,14 @@ router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
     responses={
         **InternalServerError,
     },
+    #dependencies=[Security(bearer_scheme)],
 )
 async def get_users(
-    sender: FromDishka[Sender],
+    interactor: FromDishka[RetrieveUserShortHandler],
     filters: UsersListScheme = Depends(),
 ) -> list[UserShortDTO]:
     """Returns a list of users"""
-    return await sender.send(RetrieveUsersListRequest(*filters.to_dto()))
+    return await interactor.handle(filters.to_dto())
 
 
 @router.post(
@@ -59,14 +58,13 @@ async def get_users(
         **BadRequest,
         **conflict("User already exists"),
     },
+    #dependencies=[Security(bearer_scheme)],
 )
 async def create_user(
-    sender: FromDishka[Sender],
+    interactor: FromDishka[UserCreatedHandler],
     create_data: UserCreateScheme = Body(...),
 ) -> UUID:
-    return await sender.send(
-        RetrieveNewUserIDRequest(dto=create_data.to_dto())
-    )
+    return await interactor.handle(create_data.to_dto())
 
 
 @router.get(
@@ -76,11 +74,13 @@ async def create_user(
         **InternalServerError,
         **not_found("User not found"),
     },
+    #dependencies=[Security(bearer_scheme)],
 )
 async def get_user_by_id(
-    sender: FromDishka[Sender], user_id: UUID
+    interactor: FromDishka[RetrieveUserRequestHandler],
+    user_id: UUID,
 ) -> UserFullDTO:
-    return await sender.send(RetrieveUserRequest(user_id=user_id))
+    return await interactor.handle(user_id)
 
 
 @router.post(
@@ -91,20 +91,16 @@ async def get_user_by_id(
         **not_found("User not found"),
         **locked("User is already locked"),
     },
+   # dependencies=[Security(bearer_scheme)],
 )
 async def acquire_lock(
-    sender: FromDishka[Sender],
-    publisher: FromDishka[Publisher],
+    interactor: FromDishka[UserLockedHandler],
     user_id: UUID,
     lock_data: ProjectScheme = Body(...),
 ) -> None:
-    user_is_locked = await sender.send(
-        RetrieveUserIsLockedRequest(user_id=user_id)
-    )
-    await publisher.publish(
+    await interactor.handle(
         UserLocked(
             dto=lock_data.to_dto(),
-            user_is_locked=user_is_locked,
             user_id=user_id,
         )
     )
@@ -117,9 +113,15 @@ async def acquire_lock(
         **InternalServerError,
         **not_found("User not found"),
     },
+    #dependencies=[Security(bearer_scheme)],
 )
 async def release_lock(
-    publisher: FromDishka[Publisher],
+    interactor: FromDishka[UserUnlockedHandler],
     user_id: UUID,
 ) -> None:
-    await publisher.publish(UserUnlocked(user_id=user_id))
+    await interactor.handle(user_id=user_id)
+
+# @router.get("/my-projects", dependencies=[Security(bearer_scheme)])
+# async def get_my_project() -> list[ProjectScheme]:
+#     # return await service.get_projects_for_user(user_id)
+#     pass

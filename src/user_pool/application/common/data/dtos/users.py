@@ -5,6 +5,8 @@ from uuid import UUID
 from user_pool.application.common.data.dtos.assigned_user import (
     UserLockDTO,
 )
+from user_pool.application.common.data.filters.users import UserFilter
+from user_pool.application.common.data.pagination import Pagination
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,3 +32,8 @@ class UserCreateDTO:
     username: str
     email: str
     password: str
+
+@dataclass(frozen=True, slots=True)
+class RetrieveUsersListRequest:
+    pagination: Pagination
+    filters: UserFilter

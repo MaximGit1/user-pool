@@ -6,7 +6,6 @@ requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.17.2",
     "asgi-monitor>=0.6.1",
-    "bazario[dishka]>=0.4.2",
     "bcrypt>=5.0.0",
     "dishka>=1.7.2",
     "fastapi>=0.128.0",
@@ -14,6 +13,7 @@ dependencies = [
     "httptools>=0.7.1",
     "orjson>=3.11.5",
     "psycopg[binary]>=3.3.2",
+    "pyjwt>=2.11.0",
     "pyyaml>=6.0.3",
     "redis>=7.1.0",
     "sqlalchemy[asyncio]>=2.0.45",

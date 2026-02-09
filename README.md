@@ -55,7 +55,7 @@ just migrate-up
 
 ### 3. Grafana settings
 
-1. Go to [адресу](https://localhost/grafana)
+1. Go to [address](https://localhost/grafana)
 2. Log in `admin: admin`
 3. Create a new dashboard and import the json schema from `configs/grafana/dashboards/fastapi-dashboard.json`
 

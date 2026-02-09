@@ -28,3 +28,8 @@ def create_entry_point() -> FastAPI:
     _ = init_di(config=config, app_=app)
 
     return app
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(create_entry_point())
