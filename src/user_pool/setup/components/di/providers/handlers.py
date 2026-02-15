@@ -1,10 +1,14 @@
 from dishka import Provider, Scope
 
+from user_pool.application.commands.login import LoginHandler
+from user_pool.application.commands.logout import LogoutHandler
+from user_pool.application.commands.register import RegisterHandler
 from user_pool.application.commands.user_created import UserCreatedHandler
 from user_pool.application.commands.user_locked import UserLockedHandler
 from user_pool.application.commands.user_unlocked import UserUnlockedHandler
+from user_pool.application.common.services.user_context import ProtectedManager
 from user_pool.application.queries.health_checker import (
-    RetrieveHealthRequestHandler,
+    HealthRequestHandler,
 )
 from user_pool.application.queries.user_get_by_id import (
     RetrieveUserRequestHandler,
@@ -28,7 +32,10 @@ def handler_command_provider() -> Provider:
     provider.provide(UserCreatedHandler)
     provider.provide(UserLockedHandler)
     provider.provide(UserUnlockedHandler)
-    provider.provide(RetrieveHealthRequestHandler)
+    provider.provide(HealthRequestHandler)
+    provider.provide(RegisterHandler)
+    provider.provide(LoginHandler)
+    provider.provide(LogoutHandler)
 
     return provider
 
@@ -41,9 +48,18 @@ def domain_service_provider() -> Provider:
     return provider
 
 
-def get_handler_providers() -> list[Provider]:
+def other_services_provider() -> Provider:
+    provider = Provider()
+
+    provider.provide(ProtectedManager, scope=Scope.REQUEST)
+
+    return provider
+
+
+def get_handlers_providers() -> list[Provider]:
     return [
         handler_query_provider(),
         handler_command_provider(),
         domain_service_provider(),
+        other_services_provider(),
     ]

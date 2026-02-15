@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 from typing import Any, NamedTuple, Self
 
 from user_pool.setup.components.config_builder import ConfigBuilder
@@ -10,7 +11,8 @@ class Config(NamedTuple):
     logging: LoggingConfig
     db: DBConfig
     cache: CacheConfig
-
+    tokens: TokenConfig
+    auth_grpc_client: AuthGRPCClientConfig
 
 class ASGIConfig(NamedTuple):
     host: str
@@ -86,6 +88,49 @@ class CacheConfig(NamedTuple):
         )
 
 
+class TokenConfig(NamedTuple):
+    public_key: bytes
+    issuer: str
+    audience: str
+    refresh_cookie_key: str
+    access_header_key: str
+    refresh_max_age: int
+
+    @classmethod
+    def from_sources(cls, yaml_cfg: dict[str, Any]) -> "TokenConfig":
+        path = Path(__file__).resolve().parents[3] / yaml_cfg["public_key_path"]
+
+        if not path.exists():
+            raise RuntimeError(f"JWT public key not found: {path}")
+
+        return cls(
+            public_key=path.read_bytes(),
+            issuer=yaml_cfg["issuer"],
+            audience=yaml_cfg["audience"],
+            refresh_cookie_key=yaml_cfg["refresh_cookie_key"],
+            access_header_key=yaml_cfg["access_header_key"],
+            refresh_max_age=ConfigBuilder.parse_duration(yaml_cfg["refresh_cookie_max_age"]),
+        )
+
+
+class AuthGRPCClientConfig(NamedTuple):
+    host: str
+    port: int
+    secret_key: str
+    secret_key_value: str
+    timeout: int
+
+    @classmethod
+    def from_sources(cls) -> Self:
+        return cls(
+            host=_get_env("AUTH_GRPC_CLIENT_HOST"),
+            port=int(_get_env("AUTH_GRPC_CLIENT_PORT")),
+            secret_key=_get_env("AUTH_GRPC_CLIENT_SECRET_KEY"),
+            secret_key_value=_get_env("AUTH_GRPC_CLIENT_SECRET_KEY_VALUE"),
+            timeout=int(_get_env("AUTH_GRPC_CLIENT_TIMEOUT"))
+        )
+
+
 def create_config() -> Config:
     yaml_cfg = ConfigBuilder.load_yaml()
 
@@ -94,6 +139,8 @@ def create_config() -> Config:
         logging=LoggingConfig.from_sources(yaml_cfg["logging"]),
         db=DBConfig.from_sources(yaml_cfg["db"]),
         cache=CacheConfig.from_sources(yaml_cfg["cache"]),
+        tokens=TokenConfig.from_sources(yaml_cfg["auth"]),
+        auth_grpc_client=AuthGRPCClientConfig.from_sources()
     )
 
 

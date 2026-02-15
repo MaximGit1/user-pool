@@ -86,3 +86,4 @@ cython_debug/
 /configs/config/.env.test
 /configs/nginx/certs/fullchain.pem
 /configs/nginx/certs/privkey.pem
+/configs/jwt-pubkey.pem

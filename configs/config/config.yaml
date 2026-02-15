@@ -15,6 +15,14 @@ default:
     assignment_ttl: 5400
     client: redis
 
+  auth:
+    public_key_path: configs/jwt-pubkey.pem
+    refresh_cookie_key: auth_refresh_token
+    access_header_key: X-New-Access-Token
+    issuer: auth-service
+    audience: auth-client
+    refresh_cookie_max_age: 12h
+
 test:
   asgi:
     debug: true

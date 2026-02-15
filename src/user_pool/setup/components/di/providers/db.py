@@ -41,7 +41,7 @@ from user_pool.infrastructure.db.sqlalchemy_exception_mapper import (
 from user_pool.infrastructure.db.sqlalchemy_transaction_manager import (
     SqlAlchemyTransactionManager,
 )
-from user_pool.setup.components.exception_rules import init_exception_rules
+from user_pool.infrastructure.db.exception_rules import init_exception_rules
 from user_pool.setup.config import DBConfig
 
 

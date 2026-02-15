@@ -31,7 +31,40 @@ REDIS_PASSWORD=supersecret
 > For docker test mode, environment variables are taken from the same file as the application itself.
 
 
-4. Create keys for nginx
+
+4. Integration with an external SSO service
+
+#### Setting up a gRPC client:
+
+4.1. Change the host and port information in `configs/config/.env.*`
+
+4.2. If you want to run the project locally, you can run a [local SSO server](). After installing, configuring, and launching the container, you need to create a network.
+
+```shell
+docker network create grpc_network
+```
+
+4.3. Copy the JWT public key file from the SSO application and specify the path in the config
+4.4. Run API container (current repository)
+4.5. Find out container names
+
+```shell
+docker ps
+```
+
+4.6. Connect containers to the shared network
+
+```shell
+docker network connect grpc_network auth-auth-1
+docker network connect grpc_network user_pool_api
+```
+###### insert your container names
+
+4.7. Restart containers
+
+___
+
+5. Create keys for nginx
 
 ```shell
 openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \                                                            
@@ -89,3 +122,8 @@ just plot
 2. Copy the finished HTML page
 3. Create an HTML file anywhere and paste the generated content
 
+### Running locally outside a Docker container
+
+```shell
+PYTHONPATH=src uv run --env-file configs/config/.env.* src/user_pool/setup/main.py
+```

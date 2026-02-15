@@ -15,6 +15,14 @@ env-create:
 
     printf "DB_USER=\nDB_PASSWORD=\nDB_NAME=\n\nREDIS_PASSWORD=\n" > ./.env
 
+gen-proto FILE_PATH:
+    python3 -m grpc_tools.protoc -I configs/contracts \
+    --python_out=src/user_pool/infrastructure/grpc/gen \
+    --grpc_python_out=src/user_pool/infrastructure/grpc/gen \
+    --mypy_out=src/user_pool/infrastructure/grpc/gen \
+    --mypy_grpc_out=src/user_pool/infrastructure/grpc/gen \
+    {{FILE_PATH}}
+
 plot:
     PYTHONPATH=src uv run --env-file ./configs/config/.env.dev.dist ./scripts/plot_dependencies_data.py
 

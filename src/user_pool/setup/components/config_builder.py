@@ -2,6 +2,8 @@ import os
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
+import re
+from datetime import timedelta
 
 import yaml
 
@@ -12,6 +14,8 @@ class StartMode(StrEnum):
 
 
 class ConfigBuilder:
+    _DURATION_PATTERN = re.compile(r"^(?P<value>\d+)(?P<unit>[smhd])$")
+
     @classmethod
     def config_path(cls) -> Path:
         return Path(__file__).resolve().parents[4] / "configs" / "config"
@@ -28,7 +32,6 @@ class ConfigBuilder:
 
         base = raw.get("default", {})
         override = raw.get(cls._select_mode().value, {})
-
         return cls._deep_merge(base, override)
 
     @classmethod
@@ -44,7 +47,6 @@ class ConfigBuilder:
     @classmethod
     def _select_mode(cls) -> StartMode:
         value = os.getenv("ENV")
-
         match value:
             case StartMode.Test:
                 return StartMode.Test
@@ -53,3 +55,28 @@ class ConfigBuilder:
             case _:
                 err_msg = "Unknown environment 'ENV' "
                 raise RuntimeError(err_msg)
+
+    @classmethod
+    def parse_duration(cls, value: str) -> int:
+        match = cls._DURATION_PATTERN.match(value.strip())
+        if not match:
+            raise ValueError(f"Invalid duration format: {value}")
+
+        amount = int(match.group("value"))
+        unit = match.group("unit")
+
+        delta = timedelta(seconds=0)
+
+        match unit:
+            case "s":
+                delta = timedelta(seconds=amount)
+            case "m":
+                delta = timedelta(minutes=amount)
+            case "h":
+                delta = timedelta(hours=amount)
+            case "d":
+                delta = timedelta(days=amount)
+            case _:
+                raise ValueError(f"Unsupported duration unit: {unit}")
+
+        return int(delta.total_seconds())

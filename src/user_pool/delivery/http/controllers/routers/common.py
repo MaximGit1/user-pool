@@ -2,7 +2,7 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from user_pool.application.queries.health_checker import RetrieveHealthRequestHandler
+from user_pool.application.queries.health_checker import HealthRequestHandler
 from user_pool.delivery.http.http_response_schemes import (
     SERVICE_UNAVAILABLE,
     InternalServerError,
@@ -28,7 +28,7 @@ async def liveness() -> dict[str, bool]:
 
 
 @router.get("/ready", responses={**InternalServerError, **SERVICE_UNAVAILABLE})
-async def readiness(interactor: FromDishka[RetrieveHealthRequestHandler]) -> None:
+async def readiness(interactor: FromDishka[HealthRequestHandler]) -> None:
     """Ensure the application is ready to process requests.
     Check the internal infrastructure.
     """

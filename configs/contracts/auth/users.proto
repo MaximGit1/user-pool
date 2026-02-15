@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+
+package auth;
+option go_package = "auth/src/internal/delivery/gRPC/gen;auth";
+
+service Users {
+  rpc Create(RegisterRequest) returns (google.protobuf.Empty);
+  rpc GetUserByID(UserByIDRequest) returns (User);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message UserByIDRequest {
+  string user_id = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+}

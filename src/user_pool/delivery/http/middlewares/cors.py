@@ -8,8 +8,8 @@ def setup_cors_middleware(app_: FastAPI, config: ASGIConfig) -> None:
     app_.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            f"http://localhost:{config.port}",
-            f"http://{config.host}:{config.port}",
+            f"https://localhost:{config.port}",
+            f"https://{config.host}:{config.port}",
         ],
         allow_credentials=True,
         allow_methods=["*"],

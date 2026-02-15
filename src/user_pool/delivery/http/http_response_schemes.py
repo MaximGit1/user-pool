@@ -71,3 +71,9 @@ def conflict(msg: str) -> HttpResponses:
         code=status.HTTP_409_CONFLICT,
         message=msg,
     )
+
+UNAUTHORIZED = create_http_response(
+    class_name="Not authenticated",
+    code=status.HTTP_401_UNAUTHORIZED,
+    message="Not authenticated",
+)

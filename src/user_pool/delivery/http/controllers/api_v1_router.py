@@ -3,6 +3,9 @@ from fastapi import APIRouter
 from user_pool.delivery.http.controllers.routers.users import (
     router as user_router,
 )
+from user_pool.delivery.http.controllers.routers.auth import (
+    router as auth_router,
+)
 
 
 def create_api_v1_router() -> APIRouter:
@@ -10,7 +13,7 @@ def create_api_v1_router() -> APIRouter:
         prefix="/api/v1",
     )
 
-    sub_routers = (user_router,)
+    sub_routers = (auth_router, user_router)
 
     for sub_router in sub_routers:
         router.include_router(sub_router)

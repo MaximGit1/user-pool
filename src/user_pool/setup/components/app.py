@@ -11,6 +11,7 @@ from asgi_monitor.integrations.fastapi import (
 from dishka import AsyncContainer
 from fastapi import APIRouter, FastAPI
 from fastapi.responses import ORJSONResponse
+from grpc.aio import Channel
 
 from user_pool.delivery.http.exception_handler import init_exception_handlers
 from user_pool.delivery.http.middlewares.cors import setup_cors_middleware
@@ -57,6 +58,9 @@ def make_lifespan(logger: Logger):
         logger.info("Application is stopping...")
 
         container: AsyncContainer = app_.state.dishka_container
+
+        await (await container.get(Channel)).close()
+
         await container.close()
 
         logger.info("Application completed correctly")

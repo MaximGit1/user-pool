@@ -10,7 +10,7 @@ from user_pool.application.common.repositories.checkers import (
 log = getLogger(__name__)
 
 
-class RetrieveHealthRequestHandler:
+class HealthRequestHandler:
     def __init__(
         self,
         db: DBConnectionChecker,

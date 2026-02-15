@@ -6,8 +6,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
 from starlette import status
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
+from user_pool.application.common.exceptions.auth import ClientAlreadyExistsError, ClientNotFoundError, InvalidArgument, \
+    UnauthenticatedError, InvalidTokenError, InternalError
 from user_pool.application.common.exceptions.base import ApplicationError
 from user_pool.application.common.exceptions.db import DataMapperError
 from user_pool.application.common.exceptions.services import ServiceError
@@ -40,6 +41,12 @@ ERROR_STATUS_MAPPING: dict[type[Exception], int] = {
     UserNotFoundError: status.HTTP_404_NOT_FOUND,
     DataMapperError: status.HTTP_501_NOT_IMPLEMENTED,
     ServiceError: status.HTTP_503_SERVICE_UNAVAILABLE,
+    ClientAlreadyExistsError: status.HTTP_409_CONFLICT,
+    ClientNotFoundError: status.HTTP_404_NOT_FOUND,
+    InvalidArgument: status.HTTP_400_BAD_REQUEST,
+    UnauthenticatedError: status.HTTP_401_UNAUTHORIZED,
+    InvalidTokenError: status.HTTP_401_UNAUTHORIZED,
+    InternalError: status.HTTP_500_INTERNAL_SERVER_ERROR,
     # General (default)
     DomainError: status.HTTP_400_BAD_REQUEST,
     ApplicationError: status.HTTP_400_BAD_REQUEST,
@@ -48,7 +55,7 @@ ERROR_STATUS_MAPPING: dict[type[Exception], int] = {
 
 async def generic_error_handler(
     _: Request, exc: Exception, status_code: int
-) -> JSONResponse:
+) -> ORJSONResponse:
     """A common handler for domain and application errors."""
     if status_code >= status.HTTP_500_INTERNAL_SERVER_ERROR:
         logger.error(
@@ -64,7 +71,12 @@ async def generic_error_handler(
             exc_info=(type(exc), exc, exc.__traceback__),
         )
 
-    return JSONResponse(content={"detail": str(exc)}, status_code=status_code)
+    return ORJSONResponse(content={
+            "code": status_code,
+            "message": str(exc),
+        },
+        status_code=status_code,
+    )
 
 
 async def validation_error_handler(
@@ -78,7 +90,7 @@ async def validation_error_handler(
         errors.append(f"{field}: {error['msg']}")
     return ORJSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"detail": "Validation failed", "errors": errors},
+        content={"code": status.HTTP_422_UNPROCESSABLE_ENTITY, "message": "Validation failed"},
     )
 
 

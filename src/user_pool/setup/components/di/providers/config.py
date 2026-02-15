@@ -5,7 +5,7 @@ from user_pool.setup.config import (
     CacheConfig,
     Config,
     DBConfig,
-    LoggingConfig,
+    LoggingConfig, TokenConfig, AuthGRPCClientConfig,
 )
 
 
@@ -27,3 +27,11 @@ class ConfigProvider(Provider):
     @provide(scope=Scope.APP)
     def get_cache_config(self, config: Config) -> CacheConfig:
         return config.cache
+
+    @provide(scope=Scope.APP)
+    def get_tokens_config(self, config: Config) -> TokenConfig:
+        return config.tokens
+
+    @provide(scope=Scope.APP)
+    def get_grpc_client_config(self, config: Config) -> AuthGRPCClientConfig:
+        return config.auth_grpc_client
