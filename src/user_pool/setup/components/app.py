@@ -22,7 +22,7 @@ def init_app(
     config: ASGIConfig, routers: list[APIRouter], logger: Logger
 ) -> FastAPI:
     app = FastAPI(
-        version="1.0.0",
+        version="1.1.0",
         title="User pool platform",
         summary="bot farm",
         debug=config.debug,

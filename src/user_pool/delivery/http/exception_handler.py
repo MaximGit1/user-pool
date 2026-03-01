@@ -1,8 +1,7 @@
-from functools import partial
+import logging
 
-import structlog
-from fastapi import FastAPI, HTTPException
-from fastapi.exceptions import RequestValidationError
+
+from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from starlette import status
 from starlette.requests import Request
@@ -26,126 +25,94 @@ from user_pool.domain.exceptions.user import (
     UsernameValueError,
 )
 
-logger = structlog.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
-ERROR_STATUS_MAPPING: dict[type[Exception], int] = {
+
+
+class AppError(Exception):
+    def __init__(self, original_exc: Exception, status_code: int, public_message: str) -> None:
+        self.original_exc = original_exc
+        self.status_code = status_code
+        self.public_message = public_message
+        super().__init__(str(original_exc))
+
+
+
+type HttpStatus = int
+type ErrPublicMessage = str
+
+ERROR_STATUS_MAPPING: dict[type[Exception], tuple[HttpStatus, ErrPublicMessage]] = {
     # Domain errors
-    UsernameValueError: status.HTTP_400_BAD_REQUEST,
-    UsernameRangeError: status.HTTP_400_BAD_REQUEST,
-    EmailValueError: status.HTTP_400_BAD_REQUEST,
-    PasswordValueError: status.HTTP_400_BAD_REQUEST,
-    PasswordRangeError: status.HTTP_400_BAD_REQUEST,
+    UsernameValueError: (status.HTTP_400_BAD_REQUEST, "Invalid username"),
+    UsernameRangeError: (status.HTTP_400_BAD_REQUEST, "Invalid username"),
+    EmailValueError: (status.HTTP_400_BAD_REQUEST, "Invalid email"),
+    PasswordValueError: (status.HTTP_400_BAD_REQUEST, "Invalid password"),
+    PasswordRangeError: (status.HTTP_400_BAD_REQUEST, "Invalid password"),
+
     # Application errors
-    UsernameAlreadyExistsError: status.HTTP_409_CONFLICT,
-    UserAlreadyLockedError: status.HTTP_423_LOCKED,
-    UserNotFoundError: status.HTTP_404_NOT_FOUND,
-    DataMapperError: status.HTTP_501_NOT_IMPLEMENTED,
-    ServiceError: status.HTTP_503_SERVICE_UNAVAILABLE,
-    ClientAlreadyExistsError: status.HTTP_409_CONFLICT,
-    ClientNotFoundError: status.HTTP_404_NOT_FOUND,
-    InvalidArgument: status.HTTP_400_BAD_REQUEST,
-    UnauthenticatedError: status.HTTP_401_UNAUTHORIZED,
-    InvalidTokenError: status.HTTP_401_UNAUTHORIZED,
-    InternalError: status.HTTP_500_INTERNAL_SERVER_ERROR,
+    UsernameAlreadyExistsError: (status.HTTP_409_CONFLICT, "Username already exists"),
+    UserAlreadyLockedError: (status.HTTP_423_LOCKED, "User is already locked"),
+    UserNotFoundError:(status.HTTP_404_NOT_FOUND, "User not found"),
+    DataMapperError: (status.HTTP_501_NOT_IMPLEMENTED, "Data mapper error"),
+    ServiceError: (status.HTTP_503_SERVICE_UNAVAILABLE, "Service unavailable"),
+    ClientAlreadyExistsError: (status.HTTP_409_CONFLICT, "Client already exists"),
+    ClientNotFoundError:  (status.HTTP_404_NOT_FOUND, "Client not found"),
+    InvalidArgument: (status.HTTP_400_BAD_REQUEST, "Invalid argument"),
+    UnauthenticatedError: (status.HTTP_401_UNAUTHORIZED, "Unauthorized"),
+    InvalidTokenError: (status.HTTP_401_UNAUTHORIZED, "UNAUTHORIZED"),
+    InternalError: (status.HTTP_500_INTERNAL_SERVER_ERROR, "Internal server error"),
     # General (default)
-    DomainError: status.HTTP_400_BAD_REQUEST,
-    ApplicationError: status.HTTP_400_BAD_REQUEST,
+    DomainError: (status.HTTP_400_BAD_REQUEST, "Bad Request"),
+    ApplicationError: (status.HTTP_400_BAD_REQUEST, "Bad Request"),
 }
 
 
-async def generic_error_handler(
-    _: Request, exc: Exception, status_code: int
-) -> ORJSONResponse:
-    """A common handler for domain and application errors."""
-    if status_code >= status.HTTP_500_INTERNAL_SERVER_ERROR:
+def wrap_domain_error(exc: Exception) -> AppError:
+    if type(exc) in ERROR_STATUS_MAPPING:
+        status_code, public_message = ERROR_STATUS_MAPPING[type(exc)]
+
+        return AppError(original_exc=exc, status_code=status_code, public_message=public_message)
+
+
+    return AppError(
+        original_exc=exc,
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        public_message="Internal server error",
+    )
+
+async def app_error_handler(request: Request, exc: AppError) -> ORJSONResponse:
+    if exc.status_code >= 500:
         logger.error(
             "Server error",
-            error=f"{exc.__class__.__name__}: {exc}",
-            exc_info=(type(exc), exc, exc.__traceback__),
+            exc_info=exc.original_exc,
         )
     else:
-        warn_msg =  "Client error"
         logger.warning(
-            warn_msg,
-            error=f"{exc.__class__.__name__}: {exc}",
-            exc_info=(type(exc), exc, exc.__traceback__),
+            f"{type(exc.original_exc).__name__}: {exc.original_exc}"
         )
-
-    return ORJSONResponse(content={
-            "code": status_code,
-            "message": str(exc),
-        },
-        status_code=status_code,
-    )
-
-
-async def validation_error_handler(
-    _: Request, exc: RequestValidationError
-) -> ORJSONResponse:
-    """Handler for validation errors."""
-    logger.warning("Validation error", error=str(exc))
-    errors = []
-    for error in exc.errors():
-        field = " -> ".join(str(loc) for loc in error["loc"] if loc != "body")
-        errors.append(f"{field}: {error['msg']}")
-    return ORJSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"code": status.HTTP_422_UNPROCESSABLE_ENTITY, "message": "Validation failed"},
-    )
-
-
-async def http_error_handler(_: Request, exc: HTTPException) -> ORJSONResponse:
-    """Handler for HTTPException."""
-
-    msg = f"HTTP {exc.status_code}"
-    if exc.status_code >= 500:
-        logger.error(msg, error=str(exc))
-    else:
-        logger.warning(msg, error=str(exc))
 
     return ORJSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.detail},
-        headers=exc.headers,
+        content={"detail": exc.public_message},
     )
 
 
-async def fallback_error_handler(
-    request: Request, exc: Exception
-) -> ORJSONResponse:
-    """Fallback for all uncaught exceptions."""
-    msg = "Unhandled exception",
-    logger.critical(
-        msg,
-        error=f"{exc.__class__.__name__}: {exc}",
-        path=request.url.path,
-        method=request.method,
-        exc_info=(type(exc), exc, exc.__traceback__),
-    )
+async def fallback_handler(_: Request, __: Exception) -> ORJSONResponse:
+    logger.exception("Unhandled exception")
+
     return ORJSONResponse(
-        content={"detail": "Internal server error"},
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": "Internal server error"},
     )
-
 
 def init_exception_handlers(app_: FastAPI) -> None:
-    """Configures exception handlers for the FastAPI application.
+    """Configures exception handlers for the FastAPI application"""
 
-    Registration order:
-    1. Specific exceptions
-    2. Base classes
-    3. HTTP and validation errors
-    4. General fallback (last!)
-    """
+    async def handler(request: Request, exc: Exception):
+        wrapped = wrap_domain_error(exc)
+        return await app_error_handler(request, wrapped)
 
-    for exc_type, http_status in ERROR_STATUS_MAPPING.items():
-        app_.add_exception_handler(
-            exc_type, partial(generic_error_handler, status_code=http_status)
-        )
 
-    app_.add_exception_handler(HTTPException, http_error_handler)
-    app_.add_exception_handler(
-        RequestValidationError, validation_error_handler
-    )
-
-    app_.exception_handler(Exception)(fallback_error_handler)
+    app_.add_exception_handler(ApplicationError, handler)
+    app_.add_exception_handler(ApplicationError, handler)
+    app_.add_exception_handler(Exception, fallback_handler)

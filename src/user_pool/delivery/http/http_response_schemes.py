@@ -5,7 +5,6 @@ from starlette import status
 
 
 class ErrorResponse(BaseModel):
-    code: int
     message: str
 
 
@@ -22,7 +21,7 @@ def create_http_response(
             "description": message,
             "content": {
                 "application/json": {
-                    "example": {"code": code, "message": message}
+                    "example": {"detail": message}
                 }
             },
         }

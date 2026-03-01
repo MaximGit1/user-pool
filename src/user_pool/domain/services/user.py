@@ -1,11 +1,8 @@
 from datetime import UTC, datetime
-from logging import getLogger
 
 from user_pool.domain.entities import User
 from user_pool.domain.ports import PasswordHasher, UserIDGenerator
 from user_pool.domain.value_objects import Email, RawPassword, Username
-
-log = getLogger(__name__)
 
 
 class UserService:

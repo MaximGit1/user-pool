@@ -1,5 +1,12 @@
 # User Pool service for e2e-tests
 
+A data generation platform that simulates user context within a given resource.
+
+<img src="img/prev.png">
+
+The application is built using a layered architecture. The service implements CRUD and integration with an external 
+authentication microservice via gRPC. Kubernetes tests were also performed and dashboards were built.
+
 Available paths: [Swagger](https://localhost/docs) [Grafana](https://localhost/grafana)
 
 ## Launching the application
@@ -127,3 +134,19 @@ just plot
 ```shell
 PYTHONPATH=src uv run --env-file configs/config/.env.* src/user_pool/setup/main.py
 ```
+
+
+___
+
+## Controversial decisions and assumptions
+
+> [!NOTE]
+> This repository is experimental. I decided to bring the practice of creating methods and functions from Rust and Golang
+> Also, rethink some axioms with the goal of manual control, rather than having it happen magically
+> Some points were deliberately ignored, while others were simplified or, on the contrary, complicated!
+> This repository was created solely to make it easy to copy ready-made solutions from one project to another, without having to design the basic things, but simply adapting them to your needs
+
+1. The base class for Value objects is completely unnecessary, and the `unfase` method seems like a rather controversial solution, but I decided to make it explicit
+2. Config builder. I decided to separate environment variables into public `.yaml` and private `.env`. It was possible to use ready-made solutions.
+3. Tests and infrastructure. The emphasis was on code and module interactions, not on tests or near-perfect configuration settings 
+4. Sampling applies only to databases; gRPC and other components can be done similarly
