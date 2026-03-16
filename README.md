@@ -4,10 +4,10 @@ A data generation platform that simulates user context within a given resource.
 
 <img src="img/prev.png">
 
+Available paths: [Swagger](https://localhost/docs), [Grafana](https://localhost/grafana)
+
 The application is built using a layered architecture. The service implements CRUD and integration with an external 
 authentication microservice via gRPC. Kubernetes tests were also performed and dashboards were built.
-
-Available paths: [Swagger](https://localhost/docs) [Grafana](https://localhost/grafana)
 
 ## Launching the application
 
@@ -45,7 +45,7 @@ REDIS_PASSWORD=supersecret
 
 4.1. Change the host and port information in `configs/config/.env.*`
 
-4.2. If you want to run the project locally, you can run a [local SSO server](). After installing, configuring, and launching the container, you need to create a network.
+4.2. If you want to run the project locally, you can run a [local SSO server](https://github.com/MaximGit1/go-sso). After installing, configuring, and launching the container, you need to create a network.
 
 ```shell
 docker network create grpc_network
@@ -142,8 +142,11 @@ ___
 
 > [!NOTE]
 > This repository is experimental. I decided to bring the practice of creating methods and functions from Rust and Golang
+> 
 > Also, rethink some axioms with the goal of manual control, rather than having it happen magically
+> 
 > Some points were deliberately ignored, while others were simplified or, on the contrary, complicated!
+> 
 > This repository was created solely to make it easy to copy ready-made solutions from one project to another, without having to design the basic things, but simply adapting them to your needs
 
 1. The base class for Value objects is completely unnecessary, and the `unfase` method seems like a rather controversial solution, but I decided to make it explicit
