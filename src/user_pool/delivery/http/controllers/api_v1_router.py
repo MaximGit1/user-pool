@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from user_pool.delivery.http.controllers.routers.users import (
-    router as user_router,
-)
 from user_pool.delivery.http.controllers.routers.auth import (
     router as auth_router,
+)
+from user_pool.delivery.http.controllers.routers.users import (
+    router as user_router,
 )
 
 

@@ -2,9 +2,16 @@ from uuid import UUID
 
 from user_pool.application.common.data.dtos.auth import AuthContext
 from user_pool.application.common.exceptions.auth import UnauthenticatedError
-from user_pool.application.common.repositories.auth.sso_clients import AuthSSOClient, UserSSOClient
-from user_pool.application.common.repositories.auth.tokenManager import TokenManager
-from user_pool.application.common.repositories.auth.tokenTransportManager import HttpTokenTransportManager
+from user_pool.application.common.repositories.auth.sso_clients import (
+    AuthSSOClient,
+    UserSSOClient,
+)
+from user_pool.application.common.repositories.auth.tokenManager import (
+    TokenManager,
+)
+from user_pool.application.common.repositories.auth.tokenTransportManager import (
+    HttpTokenTransportManager,
+)
 
 
 class JWTIdentityProvider:

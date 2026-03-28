@@ -1,8 +1,13 @@
 from typing import Protocol
 from uuid import UUID
 
-from user_pool.application.common.data.dtos.auth import ClientCreateRequest, Client, LoginRequest, AuthTokens, \
-    RefreshToken
+from user_pool.application.common.data.dtos.auth import (
+    AuthTokens,
+    Client,
+    ClientCreateRequest,
+    LoginRequest,
+    RefreshToken,
+)
 
 
 class UserSSOClient(Protocol):

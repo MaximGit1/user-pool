@@ -1,5 +1,5 @@
-from typing import Any, Protocol
 from collections.abc import Sequence
+from typing import Any, Protocol
 
 from user_pool.domain.entities import User
 

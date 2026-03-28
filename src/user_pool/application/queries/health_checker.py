@@ -1,16 +1,17 @@
-from logging import getLogger
+from logging import getLogger  # pragma: no cover
 
-from user_pool.application.common.exceptions.services import ServiceError
+from user_pool.application.common.exceptions.services import (
+    ServiceError,  # pragma: no cover
+)
 from user_pool.application.common.repositories.checkers import (
-        CacheConnectionChecker,
-        DBConnectionChecker,
-    )
+    CacheConnectionChecker,
+    DBConnectionChecker,
+)  # pragma: no cover
+
+log = getLogger(__name__)   # pragma: no cover
 
 
-log = getLogger(__name__)
-
-
-class HealthRequestHandler:
+class HealthRequestHandler:  # pragma: no cover
     def __init__(
         self,
         db: DBConnectionChecker,

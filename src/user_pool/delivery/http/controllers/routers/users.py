@@ -1,22 +1,28 @@
 from uuid import UUID
 
-
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, Body, Depends, Security
 from starlette import status
 from starlette.responses import Response
 
+from user_pool.application.commands.all_users_unclocked import (
+    AllUsersUnlockedHandler,
+)
 from user_pool.application.commands.user_created import UserCreatedHandler
-from user_pool.application.commands.user_locked import UserLocked, UserLockedHandler
-from user_pool.application.commands.user_unlocked import  UserUnlockedHandler
+from user_pool.application.commands.user_locked import (
+    UserLocked,
+    UserLockedHandler,
+)
+from user_pool.application.commands.user_unlocked import UserUnlockedHandler
 from user_pool.application.common.data.dtos.users import (
     UserFullDTO,
     UserShortDTO,
 )
 from user_pool.application.common.services.user_context import ProtectedManager
-
-from user_pool.application.queries.user_get_by_id import RetrieveUserRequestHandler
+from user_pool.application.queries.user_get_by_id import (
+    RetrieveUserRequestHandler,
+)
 from user_pool.application.queries.users_list import RetrieveUserShortHandler
 from user_pool.delivery.http.controllers.schemes.assigned_users import (
     ProjectScheme,
@@ -25,14 +31,15 @@ from user_pool.delivery.http.controllers.schemes.users import (
     UserCreateScheme,
     UsersListScheme,
 )
-from user_pool.delivery.http.secure import bearer_scheme, ContextResolver
 from user_pool.delivery.http.http_response_schemes import (
+    UNAUTHORIZED,
     BadRequest,
     InternalServerError,
     conflict,
     locked,
-    not_found, UNAUTHORIZED,
+    not_found,
 )
+from user_pool.delivery.http.secure import ContextResolver, bearer_scheme
 
 router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 
@@ -130,7 +137,26 @@ async def acquire_lock(
     )
 
 
-@router.post(
+@router.delete(
+    "/unlock",
+    status_code=status.HTTP_200_OK,
+    responses={
+        **InternalServerError,
+        **UNAUTHORIZED,
+    },
+    dependencies=[Security(bearer_scheme)],
+)
+async def release_all(
+    response: Response,
+    protection: FromDishka[ProtectedManager],
+    context: FromDishka[ContextResolver],
+    interactor: FromDishka[AllUsersUnlockedHandler],
+) -> None:
+    context.resolve_context(response, await protection())
+    await interactor.handle()
+
+
+@router.delete(
     "/{user_id}/unlock",
     status_code=status.HTTP_200_OK,
     responses={

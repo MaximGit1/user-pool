@@ -1,15 +1,26 @@
-from fastapi import APIRouter, Security
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
+from fastapi import APIRouter, Security
 from starlette import status
 from starlette.responses import Response
 
 from user_pool.application.commands.login import LoginHandler
 from user_pool.application.commands.logout import LogoutHandler
 from user_pool.application.commands.register import RegisterHandler
-from user_pool.application.common.data.dtos.auth import AccessToken, LoginRequest
+from user_pool.application.common.data.dtos.auth import (
+    AccessToken,
+    LoginRequest,
+)
 from user_pool.delivery.http.controllers.schemes.auth import RegisterSchema
-from user_pool.delivery.http.http_response_schemes import BadRequest, InternalServerError, conflict, UNAUTHORIZED
-from user_pool.delivery.http.response_data_editor import set_cookie, delete_cookie
+from user_pool.delivery.http.http_response_schemes import (
+    UNAUTHORIZED,
+    BadRequest,
+    InternalServerError,
+    conflict,
+)
+from user_pool.delivery.http.response_data_editor import (
+    delete_cookie,
+    set_cookie,
+)
 from user_pool.delivery.http.secure import bearer_scheme
 
 router = APIRouter(prefix="/auth", tags=["Auth system"], route_class=DishkaRoute)
@@ -24,7 +35,7 @@ router = APIRouter(prefix="/auth", tags=["Auth system"], route_class=DishkaRoute
         **InternalServerError,
     },
 )
-async def register(data: RegisterSchema, interactor: FromDishka[RegisterHandler],) -> None:
+async def register(data: RegisterSchema, interactor: FromDishka[RegisterHandler]) -> None:
     await interactor.handle(data.to_dto())
 
 @router.post("/login", responses={

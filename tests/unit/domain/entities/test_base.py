@@ -1,6 +1,7 @@
 from user_pool.domain.entities.base import BaseEntity
 from user_pool.domain.value_objects.base import ValueObject
 
+
 class MockID(ValueObject[int]):
     pass
 
@@ -9,7 +10,7 @@ class MockEntity(BaseEntity[MockID]):
 
 
 def test_create_entity() -> None:
-    entity = MockEntity(MockID(1))
+    _ = MockEntity(MockID(1))
 
 
 def test_id_getter() -> None:

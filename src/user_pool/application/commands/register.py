@@ -1,7 +1,9 @@
 from logging import getLogger
 
 from user_pool.application.common.data.dtos.auth import ClientCreateRequest
-from user_pool.application.common.repositories.auth.sso_clients import UserSSOClient
+from user_pool.application.common.repositories.auth.sso_clients import (
+    UserSSOClient,
+)
 
 log = getLogger(__name__)
 

@@ -97,7 +97,7 @@ class TokenConfig(NamedTuple):
     refresh_max_age: int
 
     @classmethod
-    def from_sources(cls, yaml_cfg: dict[str, Any]) -> "TokenConfig":
+    def from_sources(cls, yaml_cfg: dict[str, Any]) -> TokenConfig:
         path = Path(__file__).resolve().parents[3] / yaml_cfg["public_key_path"]
 
         if not path.exists():

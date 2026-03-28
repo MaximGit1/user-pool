@@ -1,6 +1,9 @@
 from logging import getLogger
 
-from user_pool.application.common.data.dtos.users import UserShortDTO, RetrieveUsersListRequest
+from user_pool.application.common.data.dtos.users import (
+    RetrieveUsersListRequest,
+    UserShortDTO,
+)
 from user_pool.application.common.repositories.assigned_user_read import (
     AssignedUserReadRepository,
 )

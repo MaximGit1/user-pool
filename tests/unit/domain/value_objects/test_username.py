@@ -1,10 +1,10 @@
 import pytest
 
-from user_pool.domain.value_objects.username import Username
 from user_pool.domain.exceptions.user import (
     UsernameRangeError,
     UsernameValueError,
 )
+from user_pool.domain.value_objects.username import Username
 
 
 @pytest.mark.parametrize("value", ["ValidName", "valid_name", "_VaLiD_nAmE_"])
@@ -21,7 +21,7 @@ def test_range_err_create(value: str) -> None:
         assert isinstance(exp.value, UsernameRangeError)
 
 @pytest.mark.parametrize("value", ["1ValidName", "valid_name!"])
-def test_range_err_create(value: str) -> None:
+def test_value_err_create(value: str) -> None:
     with pytest.raises(UsernameValueError) as exp:
         Username.safe(value)
 

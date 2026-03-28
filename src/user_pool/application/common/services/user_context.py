@@ -1,5 +1,7 @@
 from user_pool.application.common.data.dtos.auth import AuthContext
-from user_pool.application.common.repositories.auth.identity_provider import IdentityProvider
+from user_pool.application.common.repositories.auth.identity_provider import (
+    IdentityProvider,
+)
 
 
 class ProtectedManager:

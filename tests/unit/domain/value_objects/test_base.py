@@ -1,8 +1,8 @@
 from dataclasses import dataclass
+
 import pytest
 
 from user_pool.domain.value_objects.base import ValueObject, ValueT
-
 
 ERR_VALUE = "error throw"
 

@@ -1,8 +1,12 @@
 from logging import getLogger
 
 from user_pool.application.common.data.dtos.net import CookieKey
-from user_pool.application.common.repositories.auth.sso_clients import AuthSSOClient
-from user_pool.application.common.repositories.auth.tokenTransportManager import HttpTokenTransportManager
+from user_pool.application.common.repositories.auth.sso_clients import (
+    AuthSSOClient,
+)
+from user_pool.application.common.repositories.auth.tokenTransportManager import (
+    HttpTokenTransportManager,
+)
 from user_pool.setup.config import TokenConfig
 
 log = getLogger(__name__)

@@ -1,11 +1,19 @@
 import grpc.aio
 
-from user_pool.application.common.data.dtos.auth import LoginRequest, AuthTokens, \
-    RefreshToken
-from user_pool.application.common.exceptions.auth import InvalidArgument, InternalError, \
-    ClientNotFoundError, UnauthenticatedError
+from user_pool.application.common.data.dtos.auth import (
+    AuthTokens,
+    LoginRequest,
+    RefreshToken,
+)
+from user_pool.application.common.exceptions.auth import (
+    ClientNotFoundError,
+    InternalError,
+    InvalidArgument,
+    UnauthenticatedError,
+)
+from user_pool.infrastructure.grpc.gen.auth import auth_pb2 as msg
+from user_pool.infrastructure.grpc.gen.auth import auth_pb2_grpc
 from user_pool.setup.config import AuthGRPCClientConfig
-from user_pool.infrastructure.grpc.gen.auth import auth_pb2_grpc, auth_pb2 as msg
 
 
 class AuthGRPCClient:
@@ -23,14 +31,13 @@ class AuthGRPCClient:
             if e.code() == grpc.StatusCode.UNAUTHENTICATED:
                 err_msg = f"Unauthenticated: {e.details()}"
                 raise UnauthenticatedError(err_msg)
-            elif e.code() == grpc.StatusCode.NOT_FOUND:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
                 raise ClientNotFoundError()
-            elif e.code() == grpc.StatusCode.INVALID_ARGUMENT:
+            if e.code() == grpc.StatusCode.INVALID_ARGUMENT:
                 err_msg = "Invalid input data"
                 raise InvalidArgument(err_msg)
-            else:
-                err_msg = f"gRPC system error: {e.code()} - {e.details()}"
-                raise InternalError(err_msg)
+            err_msg = f"gRPC system error: {e.code()} - {e.details()}"
+            raise InternalError(err_msg)
 
         return AuthTokens(access=tokens.access_token, refresh=tokens.refresh_token)
 
@@ -43,9 +50,8 @@ class AuthGRPCClient:
             if e.code() == grpc.StatusCode.UNAUTHENTICATED:
                 err_msg = f"Refresh error: Refresh token is invalid or expired. {e.details()}"
                 raise UnauthenticatedError(err_msg)
-            else:
-                err_msg = f"gRPC system error: {e.code()} - {e.details()}"
-                raise InternalError(err_msg)
+            err_msg = f"gRPC system error: {e.code()} - {e.details()}"
+            raise InternalError(err_msg)
 
         return AuthTokens(access=tokens.access_token, refresh=tokens.refresh_token)
 
@@ -59,6 +65,5 @@ class AuthGRPCClient:
             if e.code() == grpc.StatusCode.UNAUTHENTICATED:
                 err_msg = f"The token is no longer valid. {e.details()}"
                 raise UnauthenticatedError(err_msg)
-            else:
-                err_msg = f"gRPC system error: {e.code()} - {e.details()}"
-                raise InternalError(err_msg)
+            err_msg = f"gRPC system error: {e.code()} - {e.details()}"
+            raise InternalError(err_msg)

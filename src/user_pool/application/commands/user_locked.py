@@ -6,14 +6,15 @@ from user_pool.application.common.data.dtos.assigned_user import UserLocked
 from user_pool.application.common.exceptions.users import (
     UserAlreadyLockedError,
 )
-from user_pool.application.common.repositories import AssignedUserReadRepository
-from user_pool.domain.entities.assigned_user import AssignedUser
-from user_pool.domain.value_objects.user_id import UserID
+from user_pool.application.common.repositories import (
+    AssignedUserReadRepository,
+)
 from user_pool.application.common.repositories.assugned_user_write import (
     AssignedUserWriteRepository,
 )
+from user_pool.domain.entities.assigned_user import AssignedUser
+from user_pool.domain.value_objects.user_id import UserID
 from user_pool.setup.config import CacheConfig
-
 
 log = getLogger(__name__)
 

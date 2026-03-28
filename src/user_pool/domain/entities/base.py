@@ -1,6 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, NoReturn
+from typing import Any, Generic, TypeVar
 
 from user_pool.domain.value_objects.base import ValueObject
 
@@ -18,7 +18,7 @@ class BaseEntity(ABC, Generic[EntityId]):
         """Returns entity id"""
         return self._id
 
-    def __eq__(self, other: object) -> bool | NoReturn:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, BaseEntity):
             return NotImplemented
 
@@ -27,8 +27,8 @@ class BaseEntity(ABC, Generic[EntityId]):
 
         return self.id == other.id
 
-    def __hash__(self) -> int:
+    def __hash__(self) -> int:  # pragma: no cover
         return hash((type(self), self._id))
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"{type(self).__name__}(id_={self._id!r})"

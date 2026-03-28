@@ -2,7 +2,10 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 
-from user_pool.application.common.data.dtos.users import UserCreateDTO, RetrieveUsersListRequest
+from user_pool.application.common.data.dtos.users import (
+    RetrieveUsersListRequest,
+    UserCreateDTO,
+)
 from user_pool.application.common.data.filters.users import UserFilter
 from user_pool.application.common.data.pagination import Pagination, SortOrder
 

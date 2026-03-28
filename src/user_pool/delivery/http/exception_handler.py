@@ -1,13 +1,18 @@
 import logging
 
-
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from starlette import status
 from starlette.requests import Request
 
-from user_pool.application.common.exceptions.auth import ClientAlreadyExistsError, ClientNotFoundError, InvalidArgument, \
-    UnauthenticatedError, InvalidTokenError, InternalError
+from user_pool.application.common.exceptions.auth import (
+    ClientAlreadyExistsError,
+    ClientNotFoundError,
+    InternalError,
+    InvalidArgument,
+    InvalidTokenError,
+    UnauthenticatedError,
+)
 from user_pool.application.common.exceptions.base import ApplicationError
 from user_pool.application.common.exceptions.db import DataMapperError
 from user_pool.application.common.exceptions.services import ServiceError

@@ -1,5 +1,8 @@
 from dishka import Provider, Scope
 
+from user_pool.application.commands.all_users_unclocked import (
+    AllUsersUnlockedHandler,
+)
 from user_pool.application.commands.login import LoginHandler
 from user_pool.application.commands.logout import LogoutHandler
 from user_pool.application.commands.register import RegisterHandler
@@ -36,6 +39,7 @@ def handler_command_provider() -> Provider:
     provider.provide(RegisterHandler)
     provider.provide(LoginHandler)
     provider.provide(LogoutHandler)
+    provider.provide(AllUsersUnlockedHandler)
 
     return provider
 

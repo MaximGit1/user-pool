@@ -1,8 +1,7 @@
 import pytest
 
-from user_pool.domain.value_objects.email import Email
 from user_pool.domain.exceptions.user import EmailValueError
-
+from user_pool.domain.value_objects.email import Email
 
 
 @pytest.mark.parametrize(

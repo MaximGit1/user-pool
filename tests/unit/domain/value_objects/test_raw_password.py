@@ -1,10 +1,10 @@
 import pytest
 
-from user_pool.domain.value_objects.raw_password import RawPassword
 from user_pool.domain.exceptions.user import (
     PasswordRangeError,
     PasswordValueError,
 )
+from user_pool.domain.value_objects.raw_password import RawPassword
 
 
 @pytest.mark.parametrize("value", ["lorem09_$", "qwerty_passWord123!%"])
@@ -20,7 +20,7 @@ def test_range_err_create(value: str) -> None:
     assert  isinstance(exp.value, PasswordRangeError)
 
 
-@pytest.mark.parametrize("value", ["lorem09_$@11", "23тест032-"])
+@pytest.mark.parametrize("value", ["lorem09_$@11", "23$6^032-"])
 def test_value_err_create(value: str) -> None:
     with pytest.raises(PasswordValueError) as exp:
         RawPassword.safe(value)

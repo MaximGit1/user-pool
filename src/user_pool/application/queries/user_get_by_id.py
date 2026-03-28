@@ -1,18 +1,16 @@
-from uuid import UUID
 from logging import getLogger
+from uuid import UUID
 
 from user_pool.application.common.data.dtos.assigned_user import UserLockDTO
 from user_pool.application.common.data.dtos.users import UserFullDTO
 from user_pool.application.common.exceptions.users import UserNotFoundError
-from user_pool.domain.value_objects.user_id import UserID
 from user_pool.application.common.repositories.assigned_user_read import (
     AssignedUserReadRepository,
 )
 from user_pool.application.common.repositories.user_read import (
     UserReadRepository,
 )
-
-
+from user_pool.domain.value_objects.user_id import UserID
 
 log = getLogger(__name__)
 

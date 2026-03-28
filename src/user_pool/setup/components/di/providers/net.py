@@ -1,8 +1,11 @@
-from grpc.aio import Channel, insecure_channel
 from dishka import Provider, Scope, provide
 from dishka.integrations.fastapi import FastapiProvider
+from grpc.aio import Channel, insecure_channel
 
-from user_pool.application.common.repositories.auth.sso_clients import AuthSSOClient, UserSSOClient
+from user_pool.application.common.repositories.auth.sso_clients import (
+    AuthSSOClient,
+    UserSSOClient,
+)
 from user_pool.delivery.http.secure import ContextResolver
 from user_pool.infrastructure.grpc.clients.auth import AuthGRPCClient
 from user_pool.infrastructure.grpc.clients.users import UsersGRPCClient

@@ -2,10 +2,12 @@ from dishka import Provider, Scope, from_context, provide
 
 from user_pool.setup.config import (
     ASGIConfig,
+    AuthGRPCClientConfig,
     CacheConfig,
     Config,
     DBConfig,
-    LoggingConfig, TokenConfig, AuthGRPCClientConfig,
+    LoggingConfig,
+    TokenConfig,
 )
 
 

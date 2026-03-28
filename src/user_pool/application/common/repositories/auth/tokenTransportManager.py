@@ -1,6 +1,9 @@
 from typing import Protocol
 
-from user_pool.application.common.data.dtos.auth import AccessToken, RefreshToken
+from user_pool.application.common.data.dtos.auth import (
+    AccessToken,
+    RefreshToken,
+)
 
 
 class HttpTokenTransportManager(Protocol):

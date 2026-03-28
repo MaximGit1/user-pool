@@ -5,7 +5,6 @@ from uuid import UUID
 from user_pool.domain.value_objects.project import Project
 
 
-
 @dataclass(frozen=True, slots=True)
 class UserLockDTO:
     locked_time: datetime

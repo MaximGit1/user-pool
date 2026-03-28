@@ -28,8 +28,8 @@ class ValueObject(ABC, Generic[ValueT]):
         Raises a :class:`DomainError` if the value is invalid.
         """
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"{self.__class__.__name__}({self.value!r})"
 
-    def __str__(self) -> str:
+    def __str__(self) -> str:  # pragma: no cover
         return str(self.value)

@@ -2,8 +2,11 @@ from fastapi.security import HTTPBearer
 from starlette.responses import Response
 
 from user_pool.application.common.data.dtos.auth import AuthContext
-from user_pool.application.common.data.dtos.net import HeaderData, CookieData
-from user_pool.delivery.http.response_data_editor import attach_header, set_cookie
+from user_pool.application.common.data.dtos.net import CookieData, HeaderData
+from user_pool.delivery.http.response_data_editor import (
+    attach_header,
+    set_cookie,
+)
 from user_pool.setup.config import TokenConfig
 
 bearer_scheme = HTTPBearer(auto_error=False)

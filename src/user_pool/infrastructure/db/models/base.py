@@ -1,12 +1,5 @@
-from collections.abc import Callable
-from typing import Any, TypeVar
-
 from sqlalchemy import MetaData
-from sqlalchemy.engine.interfaces import Dialect
 from sqlalchemy.orm import registry
-from sqlalchemy.types import TypeDecorator, TypeEngine
-
-from user_pool.domain.value_objects.base import ValueObject
 
 metadata = MetaData(
     naming_convention={

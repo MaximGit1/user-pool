@@ -1,8 +1,11 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import jwt
 
-from user_pool.application.common.data.dtos.auth import AccessToken, AccessPayload
+from user_pool.application.common.data.dtos.auth import (
+    AccessPayload,
+    AccessToken,
+)
 from user_pool.application.common.exceptions.auth import InvalidTokenError
 from user_pool.setup.config import TokenConfig
 
@@ -33,14 +36,14 @@ class JWTTokenManager:
 
         return AccessPayload(
             user_id=payload["sub"],
-            issued_at=datetime.fromtimestamp(payload["iat"], tz=timezone.utc),
-            expires_at=datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
+            issued_at=datetime.fromtimestamp(payload["iat"], tz=UTC),
+            expires_at=datetime.fromtimestamp(payload["exp"], tz=UTC),
         )
 
     def should_refresh(self, payload: AccessPayload) -> bool:
         """Returns True if the token has expired or is 80% of its lifespan"""
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         if now >= payload.expires_at:
             return True
 

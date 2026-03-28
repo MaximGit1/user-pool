@@ -1,6 +1,9 @@
 from starlette.requests import Request
 
-from user_pool.application.common.data.dtos.auth import AccessToken, RefreshToken
+from user_pool.application.common.data.dtos.auth import (
+    AccessToken,
+    RefreshToken,
+)
 from user_pool.setup.config import TokenConfig
 
 

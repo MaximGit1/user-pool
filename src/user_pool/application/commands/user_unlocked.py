@@ -1,10 +1,10 @@
 from logging import getLogger
 from uuid import UUID
 
-from user_pool.domain.value_objects.user_id import UserID
 from user_pool.application.common.repositories.assugned_user_write import (
     AssignedUserWriteRepository,
 )
+from user_pool.domain.value_objects.user_id import UserID
 
 log = getLogger(__name__)
 
