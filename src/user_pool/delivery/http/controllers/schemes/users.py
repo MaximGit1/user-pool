@@ -67,6 +67,8 @@ class UsersListScheme:
 
     def to_dto(self) -> RetrieveUsersListRequest:
         return RetrieveUsersListRequest(
-            pagination=Pagination(offset=self.offset, limit=self.limit, order=self.order),
+            pagination=Pagination(
+                offset=self.offset, limit=self.limit, order=self.order
+            ),
             filters=UserFilter(username=self.username, email=self.email),
         )

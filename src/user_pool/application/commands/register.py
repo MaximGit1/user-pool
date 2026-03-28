@@ -7,6 +7,7 @@ from user_pool.application.common.repositories.auth.sso_clients import (
 
 log = getLogger(__name__)
 
+
 class RegisterHandler:
     def __init__(
         self,

@@ -6,6 +6,7 @@ from user_pool.application.common.repositories.auth.identity_provider import (
 
 class ProtectedManager:
     """Protects handlers from unauthorized users"""
+
     def __init__(self, identity: IdentityProvider) -> None:
         self._identity = identity
 

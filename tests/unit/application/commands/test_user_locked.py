@@ -21,7 +21,13 @@ async def test_user_locked_handler_success():
     user_id_uuid = uuid4()
     notification = UserLocked(dto=MagicMock(), user_id=user_id_uuid)
 
-    config = CacheConfig(assignment_ttl=3600, host="host", port=888, password="pass", client="mock_client")
+    config = CacheConfig(
+        assignment_ttl=3600,
+        host="host",
+        port=888,
+        password="pass",
+        client="mock_client",
+    )
 
     mock_read = MagicMock(spec=AssignedUserReadRepository)
     mock_read.exists = AsyncMock(return_value=False)
@@ -43,7 +49,13 @@ async def test_user_locked_handler_success():
 async def test_user_locked_handler_already_locked():
     user_id_uuid = uuid4()
     notification = UserLocked(dto=MagicMock(), user_id=user_id_uuid)
-    config = CacheConfig(assignment_ttl=3600, host="host", port=888, password="pass", client="mock_client")
+    config = CacheConfig(
+        assignment_ttl=3600,
+        host="host",
+        port=888,
+        password="pass",
+        client="mock_client",
+    )
 
     mock_read = MagicMock(spec=AssignedUserReadRepository)
     mock_read.exists = AsyncMock(return_value=True)
@@ -51,7 +63,6 @@ async def test_user_locked_handler_already_locked():
     mock_write = MagicMock(spec=AssignedUserWriteRepository)
 
     handler = UserLockedHandler(config, mock_write, mock_read)
-
 
     with pytest.raises(UserAlreadyLockedError, match="user already locked"):
         await handler.handle(notification)

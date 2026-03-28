@@ -118,7 +118,7 @@ async def get_user_by_id(
         **locked("User is already locked"),
         **UNAUTHORIZED,
     },
-   dependencies=[Security(bearer_scheme)],
+    dependencies=[Security(bearer_scheme)],
 )
 async def acquire_lock(
     response: Response,

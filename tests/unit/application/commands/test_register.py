@@ -12,8 +12,7 @@ from user_pool.application.common.repositories.auth.sso_clients import (
 @pytest.mark.asyncio
 async def test_register_handler_success():
     request = ClientCreateRequest(
-        email="new_user@example.com",
-        password="secure_password"
+        email="new_user@example.com", password="secure_password"
     )
 
     mock_client = MagicMock(spec=UserSSOClient)

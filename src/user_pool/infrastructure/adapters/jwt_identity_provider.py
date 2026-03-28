@@ -43,7 +43,9 @@ class JWTIdentityProvider:
 
             new_tokens = await self._auth_client.refresh(refresh)
             access_payload = self._parser.parse_access(new_tokens.access)
-            user = await self._users_client.get_user_by_id(UUID(access_payload.user_id))
+            user = await self._users_client.get_user_by_id(
+                UUID(access_payload.user_id)
+            )
 
             return AuthContext(
                 user=user,

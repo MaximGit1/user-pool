@@ -12,12 +12,12 @@ def test_valid_create(value: str) -> None:
     RawPassword.safe(value)
 
 
-@pytest.mark.parametrize("value", ["1"*7, "l"*37])
+@pytest.mark.parametrize("value", ["1" * 7, "l" * 37])
 def test_range_err_create(value: str) -> None:
     with pytest.raises(PasswordRangeError) as exp:
         RawPassword.safe(value)
 
-    assert  isinstance(exp.value, PasswordRangeError)
+    assert isinstance(exp.value, PasswordRangeError)
 
 
 @pytest.mark.parametrize("value", ["lorem09_$@11", "23$6^032-"])
@@ -25,5 +25,4 @@ def test_value_err_create(value: str) -> None:
     with pytest.raises(PasswordValueError) as exp:
         RawPassword.safe(value)
 
-    assert  isinstance(exp.value, PasswordValueError)
-
+    assert isinstance(exp.value, PasswordValueError)

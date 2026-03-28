@@ -16,7 +16,7 @@ class UserUnlockedHandler:
     ) -> None:
         self._repo = assigned_user_repo
 
-    async def handle(self,  user_id: UUID) -> None:
+    async def handle(self, user_id: UUID) -> None:
         await self._repo.remove(UserID.unsafe(user_id))
 
         msg, ctx = (

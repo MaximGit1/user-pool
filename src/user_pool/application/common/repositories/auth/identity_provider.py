@@ -9,4 +9,3 @@ class IdentityProvider(Protocol):
     """
 
     async def get_context(self) -> AuthContext: ...
-

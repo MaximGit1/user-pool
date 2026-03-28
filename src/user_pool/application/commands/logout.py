@@ -11,6 +11,7 @@ from user_pool.setup.config import TokenConfig
 
 log = getLogger(__name__)
 
+
 class LogoutHandler:
     def __init__(
         self,

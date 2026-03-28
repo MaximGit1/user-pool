@@ -15,7 +15,11 @@ from user_pool.domain.value_objects import UserID
 
 @pytest.mark.asyncio
 async def test_user_created_handler_success():
-    request = UserCreateDTO(username="testusername", email="useremail@gmail.com", password="passworddalhd")
+    request = UserCreateDTO(
+        username="testusername",
+        email="useremail@gmail.com",
+        password="passworddalhd",
+    )
     user_id_value = UserID.unsafe(uuid4())
 
     mock_user = MagicMock()
@@ -41,7 +45,7 @@ async def test_user_created_handler_success():
     mock_service.create_user.assert_called_once_with(
         username=request.username,
         email=request.email,
-        raw_password=request.password
+        raw_password=request.password,
     )
     mock_repo.add.assert_called_once_with(user=mock_user)
     mock_transaction.commit.assert_called_once()

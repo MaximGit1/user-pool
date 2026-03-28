@@ -21,11 +21,17 @@ class ContextResolver:
 
     def resolve_context(self, response: Response, contex: AuthContext) -> None:
         if contex.new_access:
-            attach_header(response, HeaderData(key=self._access_key, value=contex.new_access))
+            attach_header(
+                response,
+                HeaderData(key=self._access_key, value=contex.new_access),
+            )
 
         if contex.new_refresh:
-            set_cookie(response, CookieData(
-                key=self._refresh_key,
-                value=contex.new_refresh,
-                max_age=self._refresh_max_age,
-            ))
+            set_cookie(
+                response,
+                CookieData(
+                    key=self._refresh_key,
+                    value=contex.new_refresh,
+                    max_age=self._refresh_max_age,
+                ),
+            )

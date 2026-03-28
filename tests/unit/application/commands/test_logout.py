@@ -23,7 +23,7 @@ async def test_logout_handler_success():
         audience="aud",
         refresh_cookie_key=cookie_key,
         access_header_key="access",
-        refresh_max_age=3600
+        refresh_max_age=3600,
     )
 
     mock_transport = MagicMock(spec=HttpTokenTransportManager)
@@ -33,9 +33,7 @@ async def test_logout_handler_success():
     mock_client.logout = AsyncMock()
 
     handler = LogoutHandler(
-        client=mock_client,
-        token_transport=mock_transport,
-        token_config=config
+        client=mock_client, token_transport=mock_transport, token_config=config
     )
 
     result = await handler.handle()

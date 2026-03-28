@@ -8,7 +8,7 @@ from user_pool.application.common.repositories.checkers import (
     DBConnectionChecker,
 )  # pragma: no cover
 
-log = getLogger(__name__)   # pragma: no cover
+log = getLogger(__name__)  # pragma: no cover
 
 
 class HealthRequestHandler:  # pragma: no cover

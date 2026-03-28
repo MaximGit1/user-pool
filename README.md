@@ -132,7 +132,7 @@ just plot
 ### Running locally outside a Docker container
 
 ```shell
-PYTHONPATH=src uv run --env-file configs/config/.env.* src/user_pool/setup/main.py
+PYTHONPATH=src uv run --env-file configs/config/.env.test src/user_pool/setup/main.py
 ```
 
 

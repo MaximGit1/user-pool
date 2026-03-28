@@ -21,7 +21,7 @@ from user_pool.domain.value_objects import UserID
 @pytest.mark.asyncio
 async def test_retrieve_user_short_list_success():
     user_id_1 = UserID.unsafe(uuid4())
-    user_id_2 =  UserID.unsafe(uuid4())
+    user_id_2 = UserID.unsafe(uuid4())
     now = datetime.now(UTC)
 
     user_1 = MagicMock(spec=User)
@@ -53,9 +53,10 @@ async def test_retrieve_user_short_list_success():
     assert result[1].user_id == user_id_2.value
     assert result[1].is_locked is False
 
-    assigned_repo.locked_user_ids.assert_called_once_with([user_id_1, user_id_2])
+    assigned_repo.locked_user_ids.assert_called_once_with(
+        [user_id_1, user_id_2]
+    )
 
     user_repo.list.assert_called_once_with(
-        filters=request.filters,
-        pagination=request.pagination
+        filters=request.filters, pagination=request.pagination
     )

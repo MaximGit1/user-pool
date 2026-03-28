@@ -29,6 +29,7 @@ def create_entry_point() -> FastAPI:
 
     return app
 
+
 if __name__ == "__main__":  # for local launch
     import uvicorn
 

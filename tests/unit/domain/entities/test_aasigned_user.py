@@ -12,10 +12,10 @@ from user_pool.domain.value_objects.project import (
 
 def test_properties() -> None:
     user_project = Project(
-            id=uuid4(),
-            env=ProjectEnvEnum.Prod,
-            domain=ProjectDomainEnum.Canary,
-        )
+        id=uuid4(),
+        env=ProjectEnvEnum.Prod,
+        domain=ProjectDomainEnum.Canary,
+    )
 
     locked_time = datetime.now(UTC)
 

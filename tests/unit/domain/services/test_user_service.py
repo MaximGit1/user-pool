@@ -21,6 +21,7 @@ class MockUserIDGenerator(UserIDGenerator):
     def generate(self) -> UserID:
         return UserID.unsafe(self.v)
 
+
 class MockPasswordHasher(PasswordHasher):
     def hash(self, raw_password: RawPassword) -> bytes:
         return raw_password.value.encode()

@@ -38,9 +38,7 @@ async def test_retrieve_user_success(user_id: UUID) -> None:
     user_repo.get_by_id = AsyncMock(return_value=mock_user)
 
     project_vo = Project(
-        id=uuid4(),
-        env=ProjectEnvEnum.Prod,
-        domain=ProjectDomainEnum.Regular
+        id=uuid4(), env=ProjectEnvEnum.Prod, domain=ProjectDomainEnum.Regular
     )
 
     mock_assignment = MagicMock()

@@ -17,15 +17,21 @@ from user_pool.setup.config import AuthGRPCClientConfig
 
 
 class UsersGRPCClient:
-    def __init__(self, config: AuthGRPCClientConfig, channel: grpc.aio.Channel) -> None:
+    def __init__(
+        self, config: AuthGRPCClientConfig, channel: grpc.aio.Channel
+    ) -> None:
         self._client = users_pb2_grpc.UsersStub(channel)
         self._meta = [(config.secret_key, config.secret_key_value)]
         self._timeout = config.timeout
 
     async def create(self, request: ClientCreateRequest) -> None:
-        req = msg.RegisterRequest(email=request.email, password=request.password)
+        req = msg.RegisterRequest(
+            email=request.email, password=request.password
+        )
         try:
-            await self._client.Create(req, timeout=self._timeout, metadata=self._meta)
+            await self._client.Create(
+                req, timeout=self._timeout, metadata=self._meta
+            )
         except grpc.aio.AioRpcError as e:
             if e.code() == grpc.StatusCode.ALREADY_EXISTS:
                 err_msg = f"User {request.email} already exists"
@@ -36,12 +42,13 @@ class UsersGRPCClient:
             err_msg = f"gRPC system error: {e.code()} - {e.details()}"
             raise InternalError(err_msg)
 
-
     async def get_user_by_id(self, user_id: UUID) -> Client:
         req = msg.UserByIDRequest(user_id=str(user_id))
 
         try:
-            user: msg.User = await self._client.GetUserByID(req, timeout=self._timeout, metadata=self._meta)
+            user: msg.User = await self._client.GetUserByID(
+                req, timeout=self._timeout, metadata=self._meta
+            )
         except grpc.aio.AioRpcError as e:
             if e.code() == grpc.StatusCode.NOT_FOUND:
                 err_msg = f"User with ID {user_id} not found."

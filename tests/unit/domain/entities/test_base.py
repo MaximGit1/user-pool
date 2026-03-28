@@ -5,6 +5,7 @@ from user_pool.domain.value_objects.base import ValueObject
 class MockID(ValueObject[int]):
     pass
 
+
 class MockEntity(BaseEntity[MockID]):
     pass
 

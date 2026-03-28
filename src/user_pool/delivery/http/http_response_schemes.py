@@ -19,14 +19,9 @@ def create_http_response(
         code: {
             "model": create_model(class_name, __base__=ErrorResponse),
             "description": message,
-            "content": {
-                "application/json": {
-                    "example": {"detail": message}
-                }
-            },
+            "content": {"application/json": {"example": {"detail": message}}},
         }
     }
-
 
 
 InternalServerError = create_http_response(
@@ -70,6 +65,7 @@ def conflict(msg: str) -> HttpResponses:
         code=status.HTTP_409_CONFLICT,
         message=msg,
     )
+
 
 UNAUTHORIZED = create_http_response(
     class_name="Not authenticated",

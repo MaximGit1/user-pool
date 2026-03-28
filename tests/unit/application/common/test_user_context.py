@@ -14,9 +14,7 @@ from user_pool.application.common.services.user_context import ProtectedManager
 async def test_protected_manager_returns_context():
     client = Client(id=uuid4(), email="authemail@gmail.com")
     expected_context = AuthContext(
-        user=client,
-        new_access="access_",
-        new_refresh="refresh_"
+        user=client, new_access="access_", new_refresh="refresh_"
     )
 
     mock_identity = MagicMock(spec=IdentityProvider)

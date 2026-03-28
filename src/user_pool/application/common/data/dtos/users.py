@@ -33,6 +33,7 @@ class UserCreateDTO:
     email: str
     password: str
 
+
 @dataclass(frozen=True, slots=True)
 class RetrieveUsersListRequest:
     pagination: Pagination

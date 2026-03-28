@@ -23,7 +23,9 @@ from user_pool.delivery.http.response_data_editor import (
 )
 from user_pool.delivery.http.secure import bearer_scheme
 
-router = APIRouter(prefix="/auth", tags=["Auth system"], route_class=DishkaRoute)
+router = APIRouter(
+    prefix="/auth", tags=["Auth system"], route_class=DishkaRoute
+)
 
 
 @router.post(
@@ -35,33 +37,41 @@ router = APIRouter(prefix="/auth", tags=["Auth system"], route_class=DishkaRoute
         **InternalServerError,
     },
 )
-async def register(data: RegisterSchema, interactor: FromDishka[RegisterHandler]) -> None:
+async def register(
+    data: RegisterSchema, interactor: FromDishka[RegisterHandler]
+) -> None:
     await interactor.handle(data.to_dto())
 
-@router.post("/login", responses={
+
+@router.post(
+    "/login",
+    responses={
         **BadRequest,
         **UNAUTHORIZED,
         **InternalServerError,
     },
- )
+)
 async def login(
     interactor: FromDishka[LoginHandler],
     request: LoginRequest,
-    response: Response
+    response: Response,
 ) -> AccessToken:
     access_token, cookie_data = await interactor.handle(request)
     set_cookie(response, cookie_data)
 
     return access_token
 
-@router.delete("/logout", dependencies=[Security(bearer_scheme)], responses={
+
+@router.delete(
+    "/logout",
+    dependencies=[Security(bearer_scheme)],
+    responses={
         **UNAUTHORIZED,
         **InternalServerError,
     },
 )
 async def logout(
-        interactor: FromDishka[LogoutHandler],
-        response: Response
+    interactor: FromDishka[LogoutHandler], response: Response
 ) -> None:
     refresh_cookie_key = await interactor.handle()
     delete_cookie(response, refresh_cookie_key)

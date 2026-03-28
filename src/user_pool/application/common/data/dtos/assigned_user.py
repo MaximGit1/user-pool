@@ -10,6 +10,7 @@ class UserLockDTO:
     locked_time: datetime
     locked_by: Project
 
+
 @dataclass(frozen=True, slots=True)
 class UserLocked:
     dto: Project

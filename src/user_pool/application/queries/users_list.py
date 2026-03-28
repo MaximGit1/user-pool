@@ -13,6 +13,7 @@ from user_pool.application.common.repositories.user_read import (
 
 log = getLogger(__name__)
 
+
 class RetrieveUserShortHandler:
     def __init__(
         self,

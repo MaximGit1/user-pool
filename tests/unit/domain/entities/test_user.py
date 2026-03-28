@@ -23,4 +23,3 @@ def test_get_properties() -> None:
     assert user.created_at == created_at
     assert user.hashed_password == hashed_password
     assert user.email.value == email
-

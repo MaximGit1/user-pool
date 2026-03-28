@@ -58,7 +58,7 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.mypy]
-files = ["src/bot_farm/"]
+files = ["src/user_pool/"]
 exclude = ".venv"
 python_version = "3.14"
 strict = true
@@ -83,12 +83,19 @@ allow_untyped_decorators = true
 disallow_incomplete_defs = true
 disallow_any_unimported = false
 
+[[tool.mypy.overrides]]
+module = "user_pool.infrastructure.grpc.gen.*"
+ignore_errors = true
+
 
 [tool.ruff]
 src = ["src", "tests"]
 target-version = "py314"
 line-length = 79
 fix = true
+exclude = [
+    "src/user_pool/infrastructure/grpc/gen",
+]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -111,10 +118,10 @@ indent-style = "space"
 
 [tool.coverage.run]
 omit = [
-    "src/user_pool/domain/ports/*",
-    "src/user_pool/application/common/filters/*",
-    "src/user_pool/application/common/dtos/*",
-
+    "src/user_pool/application/common/exceptions/*",
+    "src/user_pool/application/common/data/*",
+    "src/user_pool/application/common/repositories/*",
+    "src/user_pool/infrastructure/*",
     "src/user_pool/delivery/*",
     "src/user_pool/setup/*",
 ]

@@ -20,12 +20,14 @@ def get_grpc_provider() -> Provider:
 
     return provider
 
+
 def get_context_resolver() -> Provider:
     provider = Provider(Scope.APP)
 
     provider.provide(ContextResolver)
 
     return provider
+
 
 class GRPCChannelProvider(Provider):
     @provide(scope=Scope.APP)
@@ -34,4 +36,9 @@ class GRPCChannelProvider(Provider):
 
 
 def get_net_providers() -> list[Provider]:
-    return [FastapiProvider(), GRPCChannelProvider(), get_grpc_provider(), get_context_resolver()]
+    return [
+        FastapiProvider(),
+        GRPCChannelProvider(),
+        get_grpc_provider(),
+        get_context_resolver(),
+    ]

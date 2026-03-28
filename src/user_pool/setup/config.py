@@ -14,6 +14,7 @@ class Config(NamedTuple):
     tokens: TokenConfig
     auth_grpc_client: AuthGRPCClientConfig
 
+
 class ASGIConfig(NamedTuple):
     host: str
     port: int
@@ -98,7 +99,9 @@ class TokenConfig(NamedTuple):
 
     @classmethod
     def from_sources(cls, yaml_cfg: dict[str, Any]) -> TokenConfig:
-        path = Path(__file__).resolve().parents[3] / yaml_cfg["public_key_path"]
+        path = (
+            Path(__file__).resolve().parents[3] / yaml_cfg["public_key_path"]
+        )
 
         if not path.exists():
             raise RuntimeError(f"JWT public key not found: {path}")
@@ -109,7 +112,9 @@ class TokenConfig(NamedTuple):
             audience=yaml_cfg["audience"],
             refresh_cookie_key=yaml_cfg["refresh_cookie_key"],
             access_header_key=yaml_cfg["access_header_key"],
-            refresh_max_age=ConfigBuilder.parse_duration(yaml_cfg["refresh_cookie_max_age"]),
+            refresh_max_age=ConfigBuilder.parse_duration(
+                yaml_cfg["refresh_cookie_max_age"]
+            ),
         )
 
 
@@ -127,7 +132,7 @@ class AuthGRPCClientConfig(NamedTuple):
             port=int(_get_env("AUTH_GRPC_CLIENT_PORT")),
             secret_key=_get_env("AUTH_GRPC_CLIENT_SECRET_KEY"),
             secret_key_value=_get_env("AUTH_GRPC_CLIENT_SECRET_KEY_VALUE"),
-            timeout=int(_get_env("AUTH_GRPC_CLIENT_TIMEOUT"))
+            timeout=int(_get_env("AUTH_GRPC_CLIENT_TIMEOUT")),
         )
 
 
@@ -140,7 +145,7 @@ def create_config() -> Config:
         db=DBConfig.from_sources(yaml_cfg["db"]),
         cache=CacheConfig.from_sources(yaml_cfg["cache"]),
         tokens=TokenConfig.from_sources(yaml_cfg["auth"]),
-        auth_grpc_client=AuthGRPCClientConfig.from_sources()
+        auth_grpc_client=AuthGRPCClientConfig.from_sources(),
     )
 
 

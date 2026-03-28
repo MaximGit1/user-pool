@@ -43,6 +43,7 @@ def ports_provider() -> Provider:
 
     return provider
 
+
 def repositories_provider() -> Provider:
     provider = Provider()
 
@@ -60,7 +61,7 @@ def repositories_provider() -> Provider:
 
     provider.provide(
         JWTIdentityProvider,
-         scope=Scope.REQUEST,
+        scope=Scope.REQUEST,
         provides=IdentityProvider,
     )
 

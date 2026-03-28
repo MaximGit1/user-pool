@@ -22,7 +22,7 @@ async def test_login_handler_success() -> None:
         audience="aud",
         refresh_cookie_key="refresh_token",
         access_header_key="access",
-        refresh_max_age=3600
+        refresh_max_age=3600,
     )
 
     tokens = AuthTokens(access="access_123", refresh="refresh_456")

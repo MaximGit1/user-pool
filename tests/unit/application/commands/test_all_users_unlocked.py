@@ -1,8 +1,13 @@
-import pytest
 from unittest.mock import AsyncMock
 
-from user_pool.application.commands.all_users_unclocked import AllUsersUnlockedHandler
-from user_pool.application.common.repositories import AssignedUserWriteRepository
+import pytest
+
+from user_pool.application.commands.all_users_unclocked import (
+    AllUsersUnlockedHandler,
+)
+from user_pool.application.common.repositories import (
+    AssignedUserWriteRepository,
+)
 
 
 @pytest.mark.asyncio

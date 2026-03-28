@@ -10,9 +10,11 @@ class CookieData:
     secure: bool = True
     same_site: str = "lax"
 
+
 @dataclass(frozen=True, slots=True)
 class HeaderData:
     key: str
     value: str
+
 
 type CookieKey = str

@@ -13,8 +13,10 @@ def set_cookie(response: Response, cookie: CookieData) -> None:
         httponly=cookie.httponly,
     )
 
+
 def delete_cookie(response: Response, cookie_key: str) -> None:
     response.delete_cookie(cookie_key)
+
 
 def attach_header(response: Response, header: HeaderData) -> None:
     response.headers[header.key] = header.value

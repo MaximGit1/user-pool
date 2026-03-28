@@ -28,7 +28,6 @@ class RedisAssignedUserWriteRepository:
             await pipe.sadd(self._assigned_users_index_key, key)
             await pipe.execute()
 
-
     async def remove(self, user_id: UserID) -> None:
         key = self._get_key(user_id)
 
